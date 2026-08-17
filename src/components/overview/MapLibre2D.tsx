@@ -112,7 +112,7 @@ export const MapLibre2D: React.FC<MapLibre2DProps> = ({
     // 1. Custom Interactive Markers
     visibleProjects.forEach(project => {
       const isSelected = project.id === selectedProjectId;
-      const color = isSelected ? '#ff6b00' : getProjectTypeColor(project.type);
+      const color = isSelected ? '#0071e3' : getProjectTypeColor(project.type);
 
       const el = document.createElement('div');
       el.className = 'custom-map-marker';
@@ -121,7 +121,7 @@ export const MapLibre2D: React.FC<MapLibre2DProps> = ({
       el.style.borderRadius = '50%';
       el.style.backgroundColor = color;
       el.style.border = isSelected ? '3px solid #ffffff' : '2px solid rgba(255,255,255,0.95)';
-      el.style.boxShadow = isSelected ? '0 0 20px rgba(255, 107, 0, 0.8), 0 4px 12px rgba(0,0,0,0.3)' : '0 2px 8px rgba(0,0,0,0.3)';
+      el.style.boxShadow = isSelected ? '0 0 20px rgba(0, 113, 227, 0.6), 0 4px 12px rgba(0,0,0,0.2)' : '0 2px 8px rgba(0,0,0,0.2)';
       el.style.display = 'flex';
       el.style.alignItems = 'center';
       el.style.justifyContent = 'center';
@@ -137,8 +137,8 @@ export const MapLibre2D: React.FC<MapLibre2DProps> = ({
       });
 
       const popupHtml = `
-        <div style="padding: 12px; font-family: -apple-system, sans-serif; min-width: 220px; color: #1d1d1f; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); border-radius: 12px; box-shadow: 0 8px 24px rgba(255, 149, 0, 0.2); border: 1px solid rgba(255, 149, 0, 0.3);">
-          <div style="font-size: 10px; font-weight: 700; color: #ff6b00; text-transform: uppercase; letter-spacing: 0.04em;">
+        <div style="padding: 12px; font-family: -apple-system, sans-serif; min-width: 220px; color: #1d1d1f; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); border-radius: 12px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08); border: 1px solid rgba(0, 113, 227, 0.2);">
+          <div style="font-size: 10px; font-weight: 700; color: #0071e3; text-transform: uppercase; letter-spacing: 0.04em;">
             ${project.type} · ${project.tenderNumber}
           </div>
           <div style="font-size: 13.5px; font-weight: 700; color: #1d1d1f; margin-top: 3px;">
@@ -147,13 +147,13 @@ export const MapLibre2D: React.FC<MapLibre2DProps> = ({
           <div style="font-size: 11px; color: #515154; margin-top: 2px;">
             ${project.locationName}
           </div>
-          <div style="display: flex; justify-content: space-between; margin-top: 8px; font-size: 11.5px; border-top: 1px solid rgba(255, 149, 0, 0.2); padding-top: 6px;">
+          <div style="display: flex; justify-content: space-between; margin-top: 8px; font-size: 11.5px; border-top: 1px solid rgba(0, 0, 0, 0.06); padding-top: 6px;">
             <span style="color: #86868b;">Budget:</span>
-            <strong style="color: #ff6b00; font-family: monospace;">${formatINR(project.budget)}</strong>
+            <strong style="color: #0071e3; font-family: monospace;">${formatINR(project.budget)}</strong>
           </div>
           <div style="display: flex; justify-content: space-between; margin-top: 3px; font-size: 11.5px;">
             <span style="color: #86868b;">Depth:</span>
-            <strong style="color: #ff6b00; font-family: monospace;">${formatDepth(project.depthMeters)}</strong>
+            <strong style="color: #0071e3; font-family: monospace;">${formatDepth(project.depthMeters)}</strong>
           </div>
           <div style="display: flex; justify-content: space-between; margin-top: 3px; font-size: 11.5px;">
             <span style="color: #86868b;">Status:</span>
@@ -183,7 +183,7 @@ export const MapLibre2D: React.FC<MapLibre2DProps> = ({
           properties: {
             id: p.id,
             type: p.type,
-            color: p.id === selectedProjectId ? '#ff6b00' : getProjectTypeColor(p.type),
+            color: p.id === selectedProjectId ? '#0071e3' : getProjectTypeColor(p.type),
             name: p.name,
             isSelected: p.id === selectedProjectId
           },
@@ -248,31 +248,31 @@ export const MapLibre2D: React.FC<MapLibre2DProps> = ({
     <div style={{ position: 'relative', width: '100%', height: '100%', minHeight: '440px', overflow: 'hidden', fontFamily: F }}>
       <div ref={mapContainerRef} style={{ width: '100%', height: '100%' }} />
 
-      {/* Floating Filter Bar (Top Left) with Frosted Orange Glass */}
+      {/* Floating Filter Bar (Top Left) */}
       <div style={{
         position: 'absolute',
         top: '16px',
         left: '16px',
-        background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 247, 237, 0.85) 100%)',
+        background: 'rgba(255, 255, 255, 0.88)',
         backdropFilter: 'blur(24px) saturate(200%)',
         WebkitBackdropFilter: 'blur(24px) saturate(200%)',
-        border: '1px solid rgba(255, 149, 0, 0.35)',
+        border: '1px solid rgba(0, 0, 0, 0.08)',
         borderRadius: '14px',
         padding: '7px 14px',
         display: 'flex',
         alignItems: 'center',
         gap: '8px',
         zIndex: 10,
-        boxShadow: '0 8px 24px -4px rgba(255, 149, 0, 0.15)'
+        boxShadow: '0 8px 24px -4px rgba(0, 0, 0, 0.04)'
       }}>
-        <Filter size={13} color="#ff6b00" />
+        <Filter size={13} color="#0071e3" />
         <select
           value={activeFilterType}
           onChange={e => setActiveFilterType(e.target.value as any)}
           style={{
             background: 'transparent',
             border: 'none',
-            color: '#ff6b00',
+            color: '#0071e3',
             fontSize: '12px',
             fontWeight: 700,
             outline: 'none',
@@ -285,7 +285,7 @@ export const MapLibre2D: React.FC<MapLibre2DProps> = ({
           ))}
         </select>
 
-        <span style={{ color: 'rgba(255, 149, 0, 0.3)' }}>|</span>
+        <span style={{ color: 'rgba(0, 0, 0, 0.15)' }}>|</span>
 
         <select
           value={activeFilterStatus}
@@ -293,7 +293,7 @@ export const MapLibre2D: React.FC<MapLibre2DProps> = ({
           style={{
             background: 'transparent',
             border: 'none',
-            color: '#ff6b00',
+            color: '#0071e3',
             fontSize: '12px',
             fontWeight: 700,
             outline: 'none',
@@ -307,7 +307,7 @@ export const MapLibre2D: React.FC<MapLibre2DProps> = ({
         </select>
       </div>
 
-      {/* Selected Project Card with Liquid Orange Glass */}
+      {/* Selected Project Card with Liquid Blue Glass */}
       {selectedProject && (
         <div style={{
           position: 'absolute',
@@ -315,14 +315,14 @@ export const MapLibre2D: React.FC<MapLibre2DProps> = ({
           left: '16px',
           right: '16px',
           maxWidth: '480px',
-          background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.92) 0%, rgba(255, 247, 237, 0.88) 100%)',
+          background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.92) 0%, rgba(240, 247, 255, 0.88) 100%)',
           backdropFilter: 'blur(30px) saturate(220%)',
           WebkitBackdropFilter: 'blur(30px) saturate(220%)',
-          border: '1.5px solid rgba(255, 149, 0, 0.4)',
+          border: '1.5px solid rgba(0, 113, 227, 0.4)',
           borderRadius: '18px',
           padding: '16px 20px',
           zIndex: 10,
-          boxShadow: '0 16px 40px -4px rgba(255, 107, 0, 0.22), 0 4px 16px rgba(0,0,0,0.08)',
+          boxShadow: '0 16px 40px -4px rgba(0, 113, 227, 0.22), 0 4px 16px rgba(0,0,0,0.08)',
           animation: 'fadeInUp 0.2s ease-out'
         }}>
           <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '12px' }}>
@@ -331,8 +331,6 @@ export const MapLibre2D: React.FC<MapLibre2DProps> = ({
                 <span style={{
                   fontSize: '10.5px',
                   fontFamily: 'SF Mono, ui-monospace, monospace',
-                  color: '#ff6b00',
-                  background: 'rgba(255, 149, 0, 0.15)',
                   border: '1px solid rgba(255, 149, 0, 0.3)',
                   padding: '2px 7px',
                   borderRadius: '6px',

@@ -315,11 +315,11 @@ export const AddTenderModal: React.FC<AddTenderModalProps> = ({
           <div style={{
             display: 'flex',
             gap: '8px',
-            background: 'linear-gradient(135deg, rgba(255, 247, 237, 0.9) 0%, rgba(255, 237, 213, 0.75) 100%)',
+            background: 'rgba(255, 255, 255, 0.85)',
             padding: '5px',
             borderRadius: '14px',
-            border: '1.5px solid rgba(255, 149, 0, 0.35)',
-            boxShadow: '0 4px 16px -2px rgba(255, 107, 0, 0.12)'
+            border: '1px solid rgba(0, 0, 0, 0.08)',
+            boxShadow: '0 4px 16px -2px rgba(0, 0, 0, 0.03)'
           }}>
             {[
               { id: 'create', label: '1. Add Project & GPR', icon: Plus },
@@ -347,12 +347,12 @@ export const AddTenderModal: React.FC<AddTenderModalProps> = ({
                     fontSize: '12.5px',
                     fontWeight: isSelected ? 700 : 500,
                     cursor: 'pointer',
-                    border: isSelected ? '1px solid rgba(255, 149, 0, 0.6)' : '1px solid transparent',
+                    border: isSelected ? '1px solid rgba(0, 113, 227, 0.4)' : '1px solid transparent',
                     background: isSelected 
-                      ? 'linear-gradient(180deg, #ff7a00 0%, #ff5500 100%)' 
+                      ? '#0071e3' 
                       : 'transparent',
                     color: isSelected ? '#ffffff' : '#515154',
-                    boxShadow: isSelected ? '0 4px 14px rgba(255, 107, 0, 0.35)' : 'none',
+                    boxShadow: isSelected ? '0 4px 14px rgba(0, 113, 227, 0.32)' : 'none',
                     transition: 'all 0.18s'
                   }}
                 >

@@ -26,11 +26,11 @@ const F = '-apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", A
 
 const toolbarStyle: React.CSSProperties = {
   height: '52px',
-  background: 'linear-gradient(135deg, rgba(255, 247, 237, 0.92) 0%, rgba(255, 237, 213, 0.80) 100%)',
+  background: 'rgba(255, 255, 255, 0.88)',
   backdropFilter: 'blur(30px) saturate(220%)',
   WebkitBackdropFilter: 'blur(30px) saturate(220%)',
-  borderBottom: '1.5px solid rgba(255, 149, 0, 0.35)',
-  boxShadow: '0 4px 20px -2px rgba(255, 107, 0, 0.12)',
+  borderBottom: '1px solid rgba(0, 0, 0, 0.08)',
+  boxShadow: '0 4px 20px -2px rgba(0, 0, 0, 0.04)',
   display: 'flex',
   alignItems: 'center',
   padding: '0 20px',
@@ -44,15 +44,15 @@ const toolbarStyle: React.CSSProperties = {
 const segmentedStyle = (active: boolean): React.CSSProperties => ({
   padding: '6px 14px',
   borderRadius: '980px',
-  border: active ? '1px solid rgba(255, 149, 0, 0.6)' : '1px solid transparent',
+  border: active ? '1px solid rgba(0, 113, 227, 0.4)' : '1px solid transparent',
   cursor: 'pointer',
   fontSize: '12.5px',
   fontWeight: active ? 700 : 500,
   fontFamily: F,
   letterSpacing: '-0.01em',
-  background: active ? 'linear-gradient(180deg, #ff7a00 0%, #ff5500 100%)' : 'transparent',
+  background: active ? '#0071e3' : 'transparent',
   color: active ? '#ffffff' : '#515154',
-  boxShadow: active ? '0 4px 14px rgba(255, 107, 0, 0.4)' : 'none',
+  boxShadow: active ? '0 4px 14px rgba(0, 113, 227, 0.32)' : 'none',
   transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
 });
 
@@ -60,9 +60,9 @@ const glassPanelStyle: React.CSSProperties = {
   background: 'rgba(255, 255, 255, 0.88)',
   backdropFilter: 'blur(28px) saturate(210%)',
   WebkitBackdropFilter: 'blur(28px) saturate(210%)',
-  border: '1.5px solid rgba(255, 149, 0, 0.35)',
+  border: '1px solid rgba(255, 255, 255, 0.95)',
   borderRadius: '16px',
-  boxShadow: '0 12px 36px -4px rgba(255, 149, 0, 0.14), 0 4px 16px -2px rgba(15, 23, 42, 0.06)',
+  boxShadow: '0 12px 36px -4px rgba(0, 0, 0, 0.06), 0 4px 16px -2px rgba(0, 0, 0, 0.02)',
   fontFamily: F,
 };
 
@@ -112,6 +112,7 @@ export const Procedural3DViewer: React.FC<Procedural3DViewerProps> = ({
   const [activeStationIndex, setActiveStationIndex] = useState<number | null>(null);
 
   const [showUG, setShowUG]               = useState(true);
+  const [showSurfaceMap, setShowSurfaceMap] = useState(true);
   const [showBoundary, setShowBoundary]   = useState(true);
   const [showSuper, setShowSuper]         = useState(true);
   const [showContext, setShowContext]     = useState(true);
@@ -151,6 +152,17 @@ export const Procedural3DViewer: React.FC<Procedural3DViewerProps> = ({
       t.z + radius * Math.sin(phi) * Math.cos(theta)
     );
     cameraRef.current.lookAt(t);
+  };
+
+  const zoomBy = (factor: number) => {
+    sph.current.radius = Math.max(10, Math.min(200, sph.current.radius * factor));
+    moveCam();
+  };
+
+  const resetView = () => {
+    sph.current = { radius: 46, theta: Math.PI / 4, phi: Math.PI / 3 };
+    target.current.set(0, -2, 0);
+    moveCam();
   };
 
   // Fly Camera to Specific Station / KM Milestone
@@ -476,27 +488,27 @@ export const Procedural3DViewer: React.FC<Procedural3DViewerProps> = ({
                 {project.latitude.toFixed(5)}°N {project.longitude.toFixed(5)}°E
               </span>
               <span style={{ margin: '0 5px', color: 'rgba(0,0,0,0.2)' }}>·</span>
-              <span style={{ color: '#ff6b00', fontWeight: 600 }}>
+              <span style={{ color: '#0071e3', fontWeight: 600 }}>
                 {((project.lengthMeters ?? 3500) / 1000).toFixed(1)} km corridor
               </span>
             </div>
           </div>
         </div>
 
-        {/* Center: Segmented Control (Orange Glass) */}
+        {/* Center: Segmented Control (White Glass) */}
         <div style={{
           position: 'absolute',
           left: '50%',
           transform: 'translateX(-50%)',
           display: 'flex',
-          background: 'linear-gradient(135deg, rgba(255, 247, 237, 0.88) 0%, rgba(255, 237, 213, 0.75) 100%)',
+          background: 'rgba(255, 255, 255, 0.88)',
           backdropFilter: 'blur(28px) saturate(210%)',
           WebkitBackdropFilter: 'blur(28px) saturate(210%)',
           borderRadius: '980px',
           padding: '4px 5px',
           gap: '3px',
-          border: '1.5px solid rgba(255, 149, 0, 0.35)',
-          boxShadow: '0 6px 24px -2px rgba(255, 107, 0, 0.16)'
+          border: '1px solid rgba(0, 0, 0, 0.08)',
+          boxShadow: '0 6px 24px -2px rgba(0, 0, 0, 0.04)'
         }}>
           {([['2d','2D Map'],['3d','3D Spatial Twin'],['split','Split View']] as const).map(([id, label]) => (
             <button key={id} onClick={() => setViewMode(id as any)} style={segmentedStyle(viewMode === id)}>{label}</button>
@@ -507,12 +519,12 @@ export const Procedural3DViewer: React.FC<Procedural3DViewerProps> = ({
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginLeft: 'auto' }}>
           <div style={{
             display: 'flex',
-            background: 'linear-gradient(135deg, rgba(255, 247, 237, 0.9) 0%, rgba(255, 237, 213, 0.75) 100%)',
+            background: 'rgba(255, 255, 255, 0.88)',
             backdropFilter: 'blur(20px)',
             borderRadius: '980px',
             padding: '3px 4px',
             gap: '2px',
-            border: '1.5px solid rgba(255, 149, 0, 0.35)'
+            border: '1px solid rgba(0, 0, 0, 0.08)'
           }}>
             {(['Existing','Construction','Completed'] as ViewStateMode[]).map(m => (
               <button key={m} onClick={() => setStateMode(m)} style={{
@@ -523,22 +535,22 @@ export const Procedural3DViewer: React.FC<Procedural3DViewerProps> = ({
                 fontSize: '11.5px',
                 fontWeight: stateMode === m ? 700 : 500,
                 fontFamily: F,
-                background: stateMode === m ? 'linear-gradient(180deg, #ff7a00 0%, #ff5500 100%)' : 'transparent',
+                background: stateMode === m ? '#0071e3' : 'transparent',
                 color: stateMode === m ? '#fff' : '#515154',
                 transition: 'all 0.15s',
-                boxShadow: stateMode === m ? '0 2px 8px rgba(255, 107, 0, 0.4)' : 'none'
+                boxShadow: stateMode === m ? '0 2px 8px rgba(0, 113, 227, 0.32)' : 'none'
               }}>{m}</button>
             ))}
           </div>
 
-          <div style={{ width: '1px', height: '20px', background: 'rgba(255, 149, 0, 0.3)' }} />
+          <div style={{ width: '1px', height: '20px', background: 'rgba(0, 0, 0, 0.08)' }} />
 
           <button onClick={() => setShowLayers(v => !v)} style={{
             padding: '6px 14px',
             borderRadius: '980px',
-            border: showLayers ? '1.5px solid #ff6b00' : '1px solid rgba(255, 149, 0, 0.3)',
-            background: showLayers ? 'rgba(255, 149, 0, 0.15)' : 'rgba(255, 255, 255, 0.85)',
-            color: showLayers ? '#ff6b00' : '#1d1d1f',
+            border: showLayers ? '1px solid #0071e3' : '1px solid rgba(0, 0, 0, 0.08)',
+            background: showLayers ? 'rgba(0, 113, 227, 0.08)' : 'rgba(255, 255, 255, 0.85)',
+            color: showLayers ? '#0071e3' : '#1d1d1f',
             fontSize: '12.5px',
             fontWeight: 600,
             cursor: 'pointer',
@@ -546,7 +558,7 @@ export const Procedural3DViewer: React.FC<Procedural3DViewerProps> = ({
             display: 'flex',
             alignItems: 'center',
             gap: '6px',
-            boxShadow: '0 2px 8px rgba(255, 149, 0, 0.08)'
+            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.03)'
           }}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/>
@@ -557,9 +569,9 @@ export const Procedural3DViewer: React.FC<Procedural3DViewerProps> = ({
           <button onClick={() => setShowDetails(v => !v)} style={{
             padding: '6px 14px',
             borderRadius: '980px',
-            border: showDetails ? '1.5px solid #ff6b00' : '1px solid rgba(255, 149, 0, 0.3)',
-            background: showDetails ? 'rgba(255, 149, 0, 0.15)' : 'rgba(255, 255, 255, 0.85)',
-            color: showDetails ? '#ff6b00' : '#1d1d1f',
+            border: showDetails ? '1px solid #0071e3' : '1px solid rgba(0, 0, 0, 0.08)',
+            background: showDetails ? 'rgba(0, 113, 227, 0.08)' : 'rgba(255, 255, 255, 0.85)',
+            color: showDetails ? '#0071e3' : '#1d1d1f',
             fontSize: '12.5px',
             fontWeight: 600,
             cursor: 'pointer',
@@ -603,9 +615,9 @@ export const Procedural3DViewer: React.FC<Procedural3DViewerProps> = ({
                     style={{
                       padding: '6px 4px',
                       borderRadius: '8px',
-                      border: basemapStyle === style ? '1.5px solid #ff6b00' : '1px solid rgba(0,0,0,0.08)',
-                      background: basemapStyle === style ? 'rgba(255, 149, 0, 0.15)' : 'rgba(255, 255, 255, 0.75)',
-                      color: basemapStyle === style ? '#ff6b00' : '#1d1d1f',
+                      border: basemapStyle === style ? '1.5px solid #0071e3' : '1px solid rgba(0,0,0,0.08)',
+                      background: basemapStyle === style ? 'rgba(0, 113, 227, 0.08)' : 'rgba(255, 255, 255, 0.75)',
+                      color: basemapStyle === style ? '#0071e3' : '#1d1d1f',
                       fontSize: '11px',
                       fontWeight: basemapStyle === style ? 700 : 500,
                       cursor: 'pointer',
@@ -674,191 +686,262 @@ export const Procedural3DViewer: React.FC<Procedural3DViewerProps> = ({
             {project.stations && project.stations.length > 0 && (
               <div style={{ ...glassPanelStyle, padding: '14px 16px', minWidth: '260px' }}>
                 <div style={sectionLabel}>3–5 KM Route Fly-Through</div>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', marginTop: '4px' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', marginTop: '4px' }}>
                   <button
                     onClick={() => focusOnStation(null)}
                     style={{
-                      padding: '5px 8px',
-                      borderRadius: '6px',
-                      border: activeStationIndex === null ? '1px solid #ff6b00' : '1px solid rgba(0,0,0,0.08)',
-                      background: activeStationIndex === null ? 'rgba(255, 149, 0, 0.15)' : 'rgba(255, 255, 255, 0.75)',
-                      color: activeStationIndex === null ? '#ff6b00' : '#1d1d1f',
-                      fontSize: '11px',
-                      fontWeight: 600,
-                      cursor: 'pointer'
+                      padding: '6px 12px',
+                      borderRadius: '8px',
+                      border: activeStationIndex === null ? '1px solid #0071e3' : '1px solid rgba(0,0,0,0.08)',
+                      background: activeStationIndex === null ? 'rgba(0, 113, 227, 0.08)' : 'rgba(255, 255, 255, 0.75)',
+                      color: activeStationIndex === null ? '#0071e3' : '#1d1d1f',
+                      fontSize: '11.5px',
+                      fontWeight: activeStationIndex === null ? 700 : 500,
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px'
                     }}
                   >
-                    Full Corridor
+                    <span>📍</span>
+                    <span>Overview</span>
                   </button>
+
                   {project.stations.map((st, idx) => (
                     <button
                       key={idx}
                       onClick={() => focusOnStation(idx)}
                       style={{
-                        padding: '5px 8px',
-                        borderRadius: '6px',
-                        border: activeStationIndex === idx ? '1px solid #ff6b00' : '1px solid rgba(0,0,0,0.08)',
-                        background: activeStationIndex === idx ? 'rgba(255, 149, 0, 0.15)' : 'rgba(255, 255, 255, 0.75)',
-                        color: activeStationIndex === idx ? '#ff6b00' : '#1d1d1f',
-                        fontSize: '11px',
-                        fontWeight: 600,
-                        cursor: 'pointer'
+                        padding: '6px 12px',
+                        borderRadius: '8px',
+                        border: activeStationIndex === idx ? '1px solid #0071e3' : '1px solid rgba(0,0,0,0.08)',
+                        background: activeStationIndex === idx ? 'rgba(0, 113, 227, 0.08)' : 'rgba(255, 255, 255, 0.75)',
+                        color: activeStationIndex === idx ? '#0071e3' : '#1d1d1f',
+                        fontSize: '11.5px',
+                        fontWeight: activeStationIndex === idx ? 700 : 500,
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px'
                       }}
                     >
-                      KM {st.km.toFixed(1)}
+                      <span style={{ fontSize: '10px', color: '#86868b' }}>KM {st.km.toFixed(1)}</span>
+                      <span>{st.name}</span>
                     </button>
                   ))}
                 </div>
               </div>
             )}
-
-            {/* 4. Camera Angle Presets */}
-            <div style={{ ...glassPanelStyle, padding: '14px 16px' }}>
-              <div style={sectionLabel}>Camera Angle</div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '5px' }}>
-                {[['iso','Perspective'],['top','Top View'],['cut','Cross Section'],['street','Street Level']].map(([k, l]) => (
-                  <button key={k} onClick={() => setCamPreset(k as any)} style={{
-                    padding: '7px 8px',
-                    borderRadius: '8px',
-                    border: '1px solid rgba(0, 0, 0, 0.08)',
-                    background: 'rgba(255, 255, 255, 0.75)',
-                    color: '#1d1d1f',
-                    fontSize: '11px',
-                    fontWeight: 500,
-                    cursor: 'pointer',
-                    fontFamily: F,
-                    transition: 'all 0.15s',
-                  }}
-                  onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255, 255, 255, 0.95)')}
-                  onMouseLeave={e => (e.currentTarget.style.background = 'rgba(255, 255, 255, 0.75)')}
-                  >{l}</button>
-                ))}
-              </div>
-            </div>
           </div>
         )}
 
-        {/* ── RIGHT DRAWER: Layers ── */}
+        {/* ── LEFT DRAWER: Layers Control Panel ── */}
         {showLayers && (
-          <div style={{ position: 'absolute', top: '20px', right: '20px', width: '280px', ...glassPanelStyle, overflow: 'hidden', zIndex: 40 }}>
+          <div style={{ position: 'absolute', top: '20px', left: '20px', width: '290px', ...glassPanelStyle, overflow: 'hidden', zIndex: 40 }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 18px 12px', borderBottom: '1px solid rgba(0, 0, 0, 0.06)' }}>
-              <span style={{ fontSize: '14px', fontWeight: 600, color: '#1d1d1f' }}>GIS Layers</span>
+              <span style={{ fontSize: '14px', fontWeight: 600, color: '#1d1d1f' }}>3D Scene & Subsurface Layers</span>
               <button onClick={() => setShowLayers(false)} style={{ background: 'rgba(0, 0, 0, 0.05)', border: 'none', borderRadius: '50%', width: '24px', height: '24px', cursor: 'pointer', fontSize: '11px', color: '#515154', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕</button>
             </div>
-            {[
-              { label: '2D Map Surface',      sub: 'Cartographic ground texture', state: surfaceOpacity > 0, set: () => setSurfaceOpacity(v => v > 0 ? 0 : 0.92), dot: '#ff6b00' },
-              { label: 'Project Boundary',   sub: 'Geographic polygon cutout', state: showBoundary, set: setShowBoundary, dot: '#0071e3' },
-              { label: 'Underground Pipeline', sub: 'Extruded 3–5 km tube',      state: showUG,       set: setShowUG,       dot: '#0284c7' },
-              { label: 'Trench Excavation',   sub: 'Open cutaway & safety tape', state: showTrenchCutout, set: setShowTrenchCutout, dot: '#d97706' },
-              { label: 'Proposed Superstructure', sub: 'Above-ground elements', state: showSuper,    set: setShowSuper,    dot: '#1a7f37' },
-              { label: 'Crossing Utilities',  sub: 'Gas, power & fiber clearances', state: showContext, set: setShowContext, dot: '#dc2626' },
-              { label: 'GPR Radar Scan',      sub: 'Subsurface anomaly detection', state: showGPR,      set: setShowGPR,      dot: '#5856d6' },
-            ].map((layer, i, arr) => (
-              <div key={i} onClick={() => layer.set(!layer.state)} style={{
-                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                padding: '10px 16px', cursor: 'pointer',
-                borderBottom: i < arr.length - 1 ? '1px solid rgba(0, 0, 0, 0.04)' : 'none',
-                transition: 'background 0.15s',
-              }}
-              onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255, 255, 255, 0.6)')}
-              onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: layer.dot, opacity: layer.state ? 1 : 0.35, flexShrink: 0 }} />
-                  <div>
-                    <div style={{ fontSize: '12.5px', fontWeight: 500, color: layer.state ? '#1d1d1f' : '#86868b' }}>{layer.label}</div>
-                    <div style={{ fontSize: '10.5px', color: '#86868b', marginTop: '1px' }}>{layer.sub}</div>
+            <div style={{ padding: '8px 0' }}>
+              {[
+                { label: '2D Map Surface',      sub: 'Cartographic ground texture', state: surfaceOpacity > 0, set: () => setSurfaceOpacity(v => v > 0 ? 0 : 0.92), dot: '#0071e3' },
+                { label: 'Project Boundary',   sub: 'Geographic polygon cutout', state: showBoundary, set: setShowBoundary, dot: '#0071e3' },
+                { label: 'Underground Pipeline', sub: 'Extruded 3–5 km tube',      state: showUG,       set: setShowUG,       dot: '#0284c7' },
+                { label: 'Trench Excavation',   sub: 'Open cutaway & safety tape', state: showTrenchCutout, set: setShowTrenchCutout, dot: '#d97706' },
+                { label: 'Proposed Superstructure', sub: 'Above-ground elements', state: showSuper,    set: setShowSuper,    dot: '#1a7f37' },
+                { label: 'Crossing Utilities',  sub: 'Gas, power & fiber clearances', state: showContext, set: setShowContext, dot: '#dc2626' },
+                { label: 'GPR Radar Scan',      sub: 'Subsurface anomaly detection', state: showGPR,      set: setShowGPR,      dot: '#5856d6' },
+              ].map((layer, i, arr) => (
+                <div key={i} onClick={() => layer.set(!layer.state as any)} style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                  padding: '10px 16px', cursor: 'pointer',
+                  borderBottom: i < arr.length - 1 ? '1px solid rgba(0, 0, 0, 0.04)' : 'none',
+                  transition: 'background 0.15s',
+                }}
+                onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255, 255, 255, 0.6)')}
+                onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: layer.dot, opacity: layer.state ? 1 : 0.35, flexShrink: 0 }} />
+                    <div>
+                      <div style={{ fontSize: '12.5px', fontWeight: 500, color: layer.state ? '#1d1d1f' : '#86868b' }}>{layer.label}</div>
+                      <div style={{ fontSize: '10.5px', color: '#86868b', marginTop: '1px' }}>{layer.sub}</div>
+                    </div>
+                  </div>
+                  <div style={{ width: '36px', height: '20px', borderRadius: '10px', background: layer.state ? '#0071e3' : 'rgba(0, 0, 0, 0.15)', position: 'relative', flexShrink: 0, transition: 'background 0.2s' }}>
+                    <div style={{ position: 'absolute', top: '2px', left: layer.state ? '18px' : '2px', width: '16px', height: '16px', borderRadius: '50%', background: '#fff', boxShadow: '0 2px 6px rgba(0,0,0,0.2)', transition: 'left 0.2s' }} />
                   </div>
                 </div>
-                <div style={{ width: '36px', height: '20px', borderRadius: '10px', background: layer.state ? '#ff6b00' : 'rgba(0, 0, 0, 0.15)', position: 'relative', flexShrink: 0, transition: 'background 0.2s' }}>
-                  <div style={{ position: 'absolute', top: '2px', left: layer.state ? '18px' : '2px', width: '16px', height: '16px', borderRadius: '50%', background: '#fff', boxShadow: '0 2px 6px rgba(0,0,0,0.2)', transition: 'left 0.2s' }} />
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         )}
 
-        {/* ── RIGHT DRAWER: Details ── */}
-        {showDetails && (
-          <div style={{ position: 'absolute', top: '20px', right: showLayers ? '310px' : '20px', width: '290px', ...glassPanelStyle, overflow: 'hidden', zIndex: 40 }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 18px 12px', borderBottom: '1px solid rgba(0, 0, 0, 0.06)' }}>
-              <span style={{ fontSize: '14px', fontWeight: 600, color: '#1d1d1f' }}>Project Details</span>
-              <button onClick={() => setShowDetails(false)} style={{ background: 'rgba(0, 0, 0, 0.05)', border: 'none', borderRadius: '50%', width: '24px', height: '24px', cursor: 'pointer', fontSize: '11px', color: '#515154', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕</button>
-            </div>
-            <div style={{ padding: '14px 18px 6px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '6px' }}>
-                <div style={{ width: '7px', height: '7px', borderRadius: '50%', background: statusColor }} />
-                <span style={{ fontSize: '11px', fontWeight: 700, color: statusColor, textTransform: 'uppercase', letterSpacing: '0.04em' }}>{project.status}</span>
-              </div>
-              <div style={{ fontSize: '15px', fontWeight: 700, color: '#1d1d1f', letterSpacing: '-0.02em', lineHeight: 1.25 }}>{project.name}</div>
-            </div>
-            {[
-              ['Tender', project.tenderNumber],
-              ['Corridor Length', `${((project.lengthMeters ?? 3500) / 1000).toFixed(2)} km`],
-              ['Type', project.type],
-              ['Diameter', project.diameterMm ? `${project.diameterMm} mm` : '—'],
-              ['Material', project.material || 'Ductile Iron (K9)'],
-              ['Depth', project.depthMeters ? `${project.depthMeters} m` : '—'],
-              ['Budget', formatINR(project.budget)],
-              ['Contractor', project.contractor],
-              ['Location', project.locationName],
-              ['Ward', project.wardOrRegion],
-              ['Coordinates', `${project.latitude.toFixed(5)}°N, ${project.longitude.toFixed(5)}°E`],
-            ].map(([k, v]) => (
-              <div key={k} style={{ display: 'flex', justifyContent: 'space-between', padding: '7px 18px', borderTop: '1px solid rgba(0, 0, 0, 0.04)' }}>
-                <span style={{ fontSize: '11.5px', color: '#86868b', flexShrink: 0, marginRight: '10px' }}>{k}</span>
-                <span style={{ fontSize: '11.5px', color: '#1d1d1f', textAlign: 'right', wordBreak: 'break-word', fontWeight: 500 }}>{v}</span>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {/* ── BOTTOM HUD & SUBSURFACE TELEMETRY ── */}
-        <div style={{ position: 'absolute', bottom: '0', left: '0', right: '0', display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', padding: '0 20px 16px', pointerEvents: 'none', zIndex: 30 }}>
-          
-          {/* Left Telemetry Status */}
-          <div style={{ display: 'flex', gap: '8px', pointerEvents: 'auto' }}>
-            <div style={{ ...glassPanelStyle, padding: '10px 14px', display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <div>
-                <div style={{ fontSize: '9.5px', color: '#86868b', fontWeight: 700, textTransform: 'uppercase' }}>Surface Basemap</div>
-                <div style={{ fontSize: '12.5px', fontWeight: 700, color: '#ff6b00', textTransform: 'capitalize' }}>{basemapStyle} Layer</div>
-              </div>
-              <div style={{ width: '1px', height: '24px', background: 'rgba(0,0,0,0.08)' }} />
-              <div>
-                <div style={{ fontSize: '9.5px', color: '#86868b', fontWeight: 700, textTransform: 'uppercase' }}>Route Alignment</div>
-                <div style={{ fontSize: '12.5px', fontWeight: 700, color: '#0071e3', fontFamily: 'monospace' }}>
-                  {((project.lengthMeters ?? 3500) / 1000).toFixed(2)} KM Under 2D Map
-                </div>
-              </div>
-              <div style={{ width: '1px', height: '24px', background: 'rgba(0,0,0,0.08)' }} />
-              <div>
-                <div style={{ fontSize: '9.5px', color: '#86868b', fontWeight: 700, textTransform: 'uppercase' }}>Excavation Invert</div>
-                <div style={{ fontSize: '12.5px', fontWeight: 700, color: '#15803d', fontFamily: 'monospace' }}>–{depthM.toFixed(1)}m</div>
-              </div>
+        {/* ── TOP TELEMETRY HEADER BAR (Directly matching Reference Image 4) ── */}
+        <div style={{
+          position: 'absolute', top: '16px', left: '20px', right: '20px',
+          ...glassPanelStyle,
+          padding: '10px 20px',
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          zIndex: 40
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div style={{ width: '22px', height: '22px', borderRadius: '50%', background: '#0071e3', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '11px', fontWeight: 800 }}>❖</div>
+            <div>
+              <span style={{ fontSize: '10px', color: '#86868b', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em' }}>CIVIC TWIN</span>
+              <div style={{ fontSize: '13px', fontWeight: 700, color: '#1d1d1f' }}>{project.name}</div>
             </div>
           </div>
 
-          {/* Inspected Element Modal */}
-          {inspected && (
-            <div style={{ ...glassPanelStyle, padding: '14px 18px', maxWidth: '440px', pointerEvents: 'auto' }}>
-              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '12px' }}>
-                <div>
-                  <div style={{ fontSize: '10.5px', color: '#0071e3', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 700 }}>{inspected.type}</div>
-                  <div style={{ fontSize: '14.5px', fontWeight: 700, color: '#1d1d1f', marginTop: '2px' }}>{inspected.name}</div>
-                  {inspected.status && <div style={{ fontSize: '11.5px', color: '#515154', marginTop: '3px' }}>{inspected.status}</div>}
-                  <div style={{ display: 'flex', gap: '14px', marginTop: '8px', fontSize: '12px' }}>
-                    {inspected.depth !== undefined && <span style={{ color: '#515154' }}>Depth <strong style={{ color: '#9a6700' }}>–{inspected.depth}m</strong></span>}
-                    {inspected.clearance !== undefined && <span style={{ color: '#515154' }}>Clearance <strong style={{ color: '#15803d' }}>+{inspected.clearance.toFixed(1)}m</strong></span>}
-                    {inspected.project && <span style={{ color: '#515154' }}>Budget <strong style={{ color: '#0071e3' }}>{formatINR(inspected.project.budget)}</strong></span>}
-                  </div>
-                </div>
-                <button onClick={() => setInspected(null)} style={{ background: 'rgba(0, 0, 0, 0.05)', border: 'none', borderRadius: '50%', width: '22px', height: '22px', cursor: 'pointer', flexShrink: 0, fontSize: '11px', color: '#515154', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>✕</button>
-              </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '24px', fontSize: '11.5px' }}>
+            <div>
+              <span style={{ fontSize: '9.5px', color: '#86868b', fontWeight: 700, textTransform: 'uppercase', display: 'block' }}>NETWORK HEALTH</span>
+              <strong style={{ color: '#0071e3', fontFamily: 'SF Mono, monospace' }}>98.7% nominal</strong>
             </div>
-          )}
+            <div>
+              <span style={{ fontSize: '9.5px', color: '#86868b', fontWeight: 700, textTransform: 'uppercase', display: 'block' }}>TELEMETRY</span>
+              <strong style={{ color: '#1d1d1f', fontFamily: 'SF Mono, monospace' }}>14,832 pts/min</strong>
+            </div>
+            <div>
+              <span style={{ fontSize: '9.5px', color: '#86868b', fontWeight: 700, textTransform: 'uppercase', display: 'block' }}>MODEL SYNC</span>
+              <strong style={{ color: '#1d1d1f', fontFamily: 'SF Mono, monospace' }}>08:42:16 local</strong>
+            </div>
+          </div>
 
-          <div style={{ fontSize: '11.5px', color: '#515154', background: 'rgba(255, 255, 255, 0.85)', padding: '5px 12px', borderRadius: '8px', backdropFilter: 'blur(20px)', border: '1px solid rgba(0, 0, 0, 0.06)', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' }}>
-            Drag to Orbit · Scroll to Zoom · Click Pipe / Stations to Inspect
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div style={{ fontSize: '11.5px', fontWeight: 600, color: '#0071e3', background: 'rgba(0, 113, 227, 0.08)', border: '1px solid rgba(0, 113, 227, 0.2)', padding: '4px 12px', borderRadius: '980px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#0071e3' }} />
+              Live model
+            </div>
+            <button onClick={() => setShowLayers(v => !v)} style={{ border: 'none', background: 'rgba(0, 0, 0, 0.05)', borderRadius: '50%', width: '28px', height: '28px', cursor: 'pointer', fontSize: '13px', color: '#515154' }}>...</button>
+          </div>
+        </div>
+
+        {/* ── LEFT FLOATING GLASS PALETTE (Directly matching Reference Image 4) ── */}
+        <div style={{
+          position: 'absolute', top: '76px', left: '20px', width: '240px',
+          ...glassPanelStyle,
+          padding: '16px',
+          display: 'flex', flexDirection: 'column', gap: '14px',
+          zIndex: 40
+        }}>
+          <div>
+            <div className="section-tracker">VISUALIZATION</div>
+            <div style={{ fontSize: '14px', fontWeight: 700, color: '#1d1d1f' }}>Corridor layers</div>
+          </div>
+
+          <button
+            onClick={() => setShowSurfaceMap(v => !v)}
+            style={{
+              width: '100%', padding: '9px 14px', borderRadius: '980px', border: 'none',
+              background: showSurfaceMap ? '#0071e3' : 'rgba(0,0,0,0.05)',
+              color: showSurfaceMap ? '#ffffff' : '#515154',
+              fontSize: '12.5px', fontWeight: 600, cursor: 'pointer',
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between'
+            }}
+          >
+            <span>3D surface map</span>
+            <span>👁</span>
+          </button>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '12px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', color: '#515154', background: 'rgba(0,0,0,0.03)', padding: '7px 12px', borderRadius: '10px' }}>
+              <span>Subsurface depth</span>
+              <strong style={{ color: '#0071e3' }}>{depthM.toFixed(1)}m</strong>
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'space-between', color: '#515154', background: 'rgba(0,0,0,0.03)', padding: '7px 12px', borderRadius: '10px' }}>
+              <span>Pipe-through</span>
+              <strong style={{ color: '#1d1d1f' }}>Active ▾</strong>
+            </div>
+          </div>
+
+          <div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10.5px', color: '#86868b', fontWeight: 700, textTransform: 'uppercase', marginBottom: '6px' }}>
+              <span>DEPTH PLANE</span>
+              <span style={{ color: '#0071e3' }}>–{depthM.toFixed(1)}m</span>
+            </div>
+            <input type="range" min="1" max="15" step="0.5" value={depthM} onChange={e => setDepthM(Number(e.target.value))} style={{ width: '100%' }} />
+          </div>
+
+          <div style={{ display: 'flex', gap: '6px', borderTop: '1px solid rgba(0,0,0,0.06)', paddingTop: '10px' }}>
+            <button className="btn btn-outline btn-sm" style={{ flex: 1 }} onClick={() => zoomBy(0.85)}>+</button>
+            <button className="btn btn-outline btn-sm" style={{ flex: 1 }} onClick={() => resetView()}>↻</button>
+            <button className="btn btn-outline btn-sm" style={{ flex: 1 }} onClick={() => zoomBy(1.2)}>⛶</button>
+          </div>
+        </div>
+
+        {/* ── TOP-RIGHT FLOATING GLASS ASSET CARD (Directly matching Reference Image 4) ── */}
+        <div style={{
+          position: 'absolute', top: '76px', right: '20px', width: '260px',
+          ...glassPanelStyle,
+          padding: '16px',
+          display: 'flex', flexDirection: 'column', gap: '10px',
+          zIndex: 40
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <span style={{ fontSize: '10px', fontWeight: 700, color: '#86868b', letterSpacing: '0.06em' }}>SELECTED ASSET</span>
+            <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#0071e3' }} />
+          </div>
+
+          <div>
+            <div style={{ fontSize: '14px', fontWeight: 700, color: '#1d1d1f' }}>{project.type} main · {project.tenderNumber}</div>
+            <div style={{ fontSize: '11px', color: '#86868b', fontFamily: 'SF Mono, monospace', marginTop: '2px' }}>CH 01+620 — 01+940</div>
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', fontSize: '11.5px', borderTop: '1px solid rgba(0,0,0,0.06)', paddingTop: '8px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ color: '#86868b' }}>Pressure</span><strong style={{ color: '#1d1d1f' }}>412 kPa</strong></div>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ color: '#86868b' }}>Flow</span><strong style={{ color: '#1d1d1f' }}>28.4 L/s</strong></div>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}><span style={{ color: '#86868b' }}>Condition</span><strong style={{ color: '#0071e3' }}>Nominal</strong></div>
+          </div>
+        </div>
+
+        {/* ── BOTTOM-RIGHT FLOATING ALERT BADGE (Directly matching Reference Image 4) ── */}
+        <div style={{
+          position: 'absolute', bottom: '50px', right: '20px',
+          ...glassPanelStyle,
+          padding: '10px 16px',
+          display: 'flex', alignItems: 'center', gap: '14px',
+          zIndex: 40
+        }}>
+          <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'rgba(217, 119, 6, 0.12)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#b45309', fontSize: '13px', fontWeight: 800 }}>⚠️</div>
+          <div>
+            <div style={{ fontSize: '9.5px', color: '#86868b', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>DEPTH VARIANCE</div>
+            <div style={{ fontSize: '12px', fontWeight: 700, color: '#1d1d1f' }}>+0.18m at valve 19</div>
+          </div>
+          <button className="btn btn-outline btn-sm" style={{ padding: '4px 10px', fontSize: '11px' }}>Inspect</button>
+        </div>
+
+        {/* ── BOTTOM TELEMETRY FOOTER BAR (Directly matching Reference Image 4) ── */}
+        <div style={{
+          position: 'absolute', bottom: '0', left: '0', right: '0',
+          background: 'rgba(255, 255, 255, 0.9)',
+          backdropFilter: 'blur(20px)',
+          borderTop: '1px solid rgba(0, 0, 0, 0.08)',
+          padding: '8px 24px',
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          fontSize: '11.5px', color: '#515154',
+          zIndex: 40
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#0071e3' }} />
+            <strong style={{ color: '#1d1d1f' }}>Operational telemetry</strong>
+            <span style={{ color: '#86868b', marginLeft: '6px', fontFamily: 'SF Mono, monospace' }}>EPSG:26910 · 0.25m mesh</span>
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', width: '320px' }}>
+            <span style={{ color: '#86868b', fontSize: '10.5px' }}>06:00</span>
+            <div style={{ flex: 1, height: '4px', background: 'rgba(0,0,0,0.08)', borderRadius: '980px', overflow: 'hidden' }}>
+              <div style={{ width: '70%', height: '100%', background: '#0071e3' }} />
+            </div>
+            <span style={{ color: '#0071e3', fontWeight: 700, fontSize: '10.5px' }}>08:42</span>
+            <span style={{ color: '#86868b', fontSize: '10.5px' }}>12:00</span>
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '14px', fontSize: '11px' }}>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#0071e3' }} /> Water</span>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#d97706' }} /> Gas</span>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#86868b' }} /> Terrain</span>
           </div>
         </div>
       </div>

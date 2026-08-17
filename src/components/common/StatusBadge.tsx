@@ -43,7 +43,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({ status, size = 'md' })
         return '#0071e3'; // Apple Blue
       case 'Pending':
       case 'In Review':
-        return '#ff9f0a'; // Apple Orange
+        return '#86868b'; // Apple Neutral Gray
       case 'Draft':
         return '#86868b'; // Apple Gray
       case 'Processing':

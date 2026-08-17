@@ -85,12 +85,12 @@ export const LocalChecklistView: React.FC<LocalChecklistViewProps> = ({ onNaviga
         }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <CheckSquare size={18} color="#ff6b00" />
+              <CheckSquare size={18} color="#0071e3" />
               <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#1d1d1f' }}>
                 Site Checklist: {selectedProject?.locationName || 'Municipal Zone'}
               </h3>
             </div>
-            <span style={{ fontSize: '11.5px', color: '#ff6b00', fontFamily: 'SF Mono, ui-monospace, monospace', fontWeight: 700, background: 'rgba(255, 149, 0, 0.12)', border: '1px solid rgba(255, 149, 0, 0.3)', padding: '3px 10px', borderRadius: '980px' }}>
+            <span style={{ fontSize: '11.5px', color: '#0071e3', fontFamily: 'SF Mono, ui-monospace, monospace', fontWeight: 700, background: 'rgba(0, 113, 227, 0.08)', border: '1px solid rgba(0, 113, 227, 0.25)', padding: '3px 10px', borderRadius: '980px' }}>
               {selectedProject?.wardOrRegion}
             </span>
           </div>
@@ -106,7 +106,7 @@ export const LocalChecklistView: React.FC<LocalChecklistViewProps> = ({ onNaviga
 
             <div style={{ background: 'rgba(255, 255, 255, 0.85)', border: '1px solid rgba(0, 0, 0, 0.06)', borderRadius: '12px', padding: '14px', backdropFilter: 'blur(16px)' }}>
               <div style={{ color: '#86868b', fontSize: '10.5px', textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.04em' }}>2. Road & Subsurface Condition</div>
-              <div style={{ fontWeight: 600, color: '#ff6b00', marginTop: '3px', fontSize: '13px' }}>
+              <div style={{ fontWeight: 600, color: '#0071e3', marginTop: '3px', fontSize: '13px' }}>
                 Active open excavation trench along right-hand service lane.
               </div>
               <div style={{ fontSize: '12px', color: '#515154', marginTop: '3px' }}>
@@ -149,7 +149,7 @@ export const LocalChecklistView: React.FC<LocalChecklistViewProps> = ({ onNaviga
                 style={{
                   background: 'rgba(255, 255, 255, 0.85)',
                   border: '1px solid rgba(0, 0, 0, 0.06)',
-                  borderLeft: comp.urgency === 'Critical' ? '4px solid #c2411b' : '4px solid #ff6b00',
+                  borderLeft: comp.urgency === 'Critical' ? '4px solid #c2411b' : '4px solid #d97706',
                   borderRadius: '12px',
                   padding: '14px 16px',
                   fontSize: '12.5px',
@@ -160,12 +160,12 @@ export const LocalChecklistView: React.FC<LocalChecklistViewProps> = ({ onNaviga
                   <span style={{
                     fontSize: '10.5px',
                     fontWeight: 700,
-                    color: comp.urgency === 'Critical' ? '#c2411b' : '#ff6b00',
-                    background: comp.urgency === 'Critical' ? 'rgba(254, 242, 240, 0.9)' : 'rgba(255, 247, 237, 0.9)',
+                    color: comp.urgency === 'Critical' ? '#c2411b' : '#d97706',
+                    background: comp.urgency === 'Critical' ? 'rgba(254, 242, 240, 0.9)' : 'rgba(254, 243, 199, 0.9)',
                     padding: '3px 9px',
                     borderRadius: '980px',
                     textTransform: 'uppercase',
-                    border: comp.urgency === 'Critical' ? '1px solid rgba(194, 65, 27, 0.3)' : '1px solid rgba(255, 149, 0, 0.3)'
+                    border: comp.urgency === 'Critical' ? '1px solid rgba(194, 65, 27, 0.3)' : '1px solid rgba(217, 119, 6, 0.3)'
                   }}>
                     {comp.urgency} · {comp.category}
                   </span>

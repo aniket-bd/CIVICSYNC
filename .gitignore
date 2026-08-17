@@ -1,0 +1,53 @@
+# ════════════════════════════════════════════════════════
+# CivicSync — Git Ignore Configuration
+# ════════════════════════════════════════════════════════
+
+# Dependencies
+node_modules/
+.pnpm-store/
+.yarn/
+package-lock.json
+
+# Build Outputs
+dist/
+dist-ssr/
+build/
+*.out
+
+# Environment & Secrets
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editor & OS Files
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.DS_Store
+Thumbs.db
+
+# Temporary Media & Scratch Files
+pic/
+.tempmediaStorage/
+scratch/
+*.tmp
+*.temp
+
+# Coverage & Testing
+coverage/
+.nyc_output/

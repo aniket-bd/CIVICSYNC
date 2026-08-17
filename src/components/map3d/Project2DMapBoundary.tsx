@@ -193,7 +193,7 @@ export const Project2DMapBoundary: React.FC<Project2DMapBoundaryProps> = ({ proj
           <div style={{ background: 'rgba(255, 255, 255, 0.9)', borderRadius: '8px', padding: '5px 8px', fontSize: '11px', fontFamily: 'monospace', color: '#0071e3', border: '1px solid rgba(0, 113, 227, 0.2)', fontWeight: 600 }}>
             {project.latitude.toFixed(5)}°N · {project.longitude.toFixed(5)}°E
           </div>
-          <div style={{ background: 'rgba(255, 149, 0, 0.12)', borderRadius: '8px', padding: '5px 8px', fontSize: '11px', fontFamily: 'monospace', color: '#ff6b00', border: '1px solid rgba(255, 149, 0, 0.3)', fontWeight: 700 }}>
+          <div style={{ background: 'rgba(0, 113, 227, 0.08)', borderRadius: '8px', padding: '5px 8px', fontSize: '11px', fontFamily: 'monospace', color: '#0071e3', border: '1px solid rgba(0, 113, 227, 0.25)', fontWeight: 700 }}>
             {((project.lengthMeters ?? 3500) / 1000).toFixed(2)} KM Route
           </div>
         </div>
