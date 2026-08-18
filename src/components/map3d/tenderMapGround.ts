@@ -217,6 +217,82 @@ export function getProjectPolygonMetrics(project: Project, bounds: MapTileBounds
   };
 }
 
+export interface CorridorOrientation {
+  centerX: number;
+  centerZ: number;
+  lengthScene: number;
+  widthScene: number;
+  angleRad: number;
+  startPt: { x: number; z: number };
+  endPt: { x: number; z: number };
+}
+
+export function getProjectCorridorOrientation(
+  metrics: TenderPolygonMetrics,
+  calibratedWidthScene?: number
+): CorridorOrientation {
+  const pts = metrics.pts;
+  if (!pts || pts.length < 2) {
+    return {
+      centerX: metrics.centerX,
+      centerZ: metrics.centerZ,
+      lengthScene: metrics.spanX,
+      widthScene: calibratedWidthScene ?? metrics.spanZ,
+      angleRad: 0,
+      startPt: { x: metrics.minX, z: metrics.centerZ },
+      endPt: { x: metrics.maxX, z: metrics.centerZ },
+    };
+  }
+
+  // Find the two farthest vertices in the polygon to determine true major corridor axis
+  let maxDistSq = 0;
+  let pA = pts[0];
+  let pB = pts[1];
+
+  for (let i = 0; i < pts.length; i++) {
+    for (let j = i + 1; j < pts.length; j++) {
+      const dx = pts[j].x - pts[i].x;
+      const dz = pts[j].z - pts[i].z;
+      const dsq = dx * dx + dz * dz;
+      if (dsq > maxDistSq) {
+        maxDistSq = dsq;
+        pA = pts[i];
+        pB = pts[j];
+      }
+    }
+  }
+
+  const lengthScene = Math.max(1.0, Math.sqrt(maxDistSq));
+  const angleRad = Math.atan2(pB.z - pA.z, pB.x - pA.x);
+  const centerX = (pA.x + pB.x) / 2;
+  const centerZ = (pA.z + pB.z) / 2;
+
+  // Calculate perpendicular cross-width
+  const nx = -Math.sin(angleRad);
+  const nz = Math.cos(angleRad);
+  let minProj = Infinity;
+  let maxProj = -Infinity;
+
+  pts.forEach(p => {
+    const proj = (p.x - centerX) * nx + (p.z - centerZ) * nz;
+    if (proj < minProj) minProj = proj;
+    if (proj > maxProj) maxProj = proj;
+  });
+
+  const polyCrossWidth = Math.max(0.2, maxProj - minProj);
+  const widthScene = calibratedWidthScene !== undefined ? Math.min(calibratedWidthScene, polyCrossWidth * 1.2) : Math.max(0.6, polyCrossWidth);
+
+  return {
+    centerX,
+    centerZ,
+    lengthScene,
+    widthScene,
+    angleRad,
+    startPt: pA,
+    endPt: pB,
+  };
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // CALIBRATED 3D DIMENSIONS
 //

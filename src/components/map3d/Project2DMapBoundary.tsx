@@ -3,6 +3,7 @@ import maplibregl from 'maplibre-gl';
 import { Project } from '../../types/project';
 import { getProjectTypeColor } from '../common/TypeIcon';
 import { formatINR } from '../../utils/formatters';
+import { getProjectPolygon } from './tenderMapGround';
 
 interface Project2DMapBoundaryProps {
   project: Project;
@@ -21,6 +22,13 @@ const GLASS_CARD: React.CSSProperties = {
   fontFamily: F,
 };
 
+function formatDistance(m: number): string {
+  if (m >= 1000) {
+    return `${(m / 1000).toFixed(1)} km`;
+  }
+  return `${m} m`;
+}
+
 function calculatePolygonSpanMeters(coords: number[][]): { spanXMeters: number; spanZMeters: number; areaSqMeters: number } {
   if (!coords || coords.length < 3) return { spanXMeters: 0, spanZMeters: 0, areaSqMeters: 0 };
   const lngs = coords.map(c => c[0]);
@@ -31,7 +39,7 @@ function calculatePolygonSpanMeters(coords: number[][]): { spanXMeters: number; 
   const maxLat = Math.max(...lats);
   const midLat = (minLat + maxLat) / 2;
 
-  // Approximate meters conversion
+  // Real geographic meter conversion
   const metersPerDegLat = 111139;
   const metersPerDegLng = 111139 * Math.cos((midLat * Math.PI) / 180);
 
@@ -57,22 +65,18 @@ export const Project2DMapBoundary: React.FC<Project2DMapBoundaryProps> = ({ proj
   const mapInstance = useRef<maplibregl.Map | null>(null);
   const markerRef   = useRef<maplibregl.Marker | null>(null);
   const [mapStyle, setMapStyle] = useState<'dark'|'satellite'|'street'>('satellite');
-  const offset = 0.0035;
 
-  const polygonCoords: number[][] = project.areaPolygon?.type === 'Polygon'
-    ? (project.areaPolygon.coordinates as number[][][])[0]
-    : [
-        [project.longitude - offset,     project.latitude - offset * 0.7],
-        [project.longitude + offset,     project.latitude - offset * 0.7],
-        [project.longitude + offset,     project.latitude + offset * 0.7],
-        [project.longitude - offset,     project.latitude + offset * 0.7],
-        [project.longitude - offset,     project.latitude - offset * 0.7],
-      ];
+  const polygonCoords: number[][] = getProjectPolygon(project);
 
   const { spanXMeters, spanZMeters, areaSqMeters } = calculatePolygonSpanMeters(polygonCoords);
-  const areaFormatted = areaSqMeters > 10000
-    ? `${(areaSqMeters / 10000).toFixed(2)} ha (${areaSqMeters.toLocaleString()} m²)`
-    : `${areaSqMeters.toLocaleString()} m²`;
+  const displayLengthMeters = project.lengthMeters ?? Math.max(spanXMeters, spanZMeters);
+  const displayWidthMeters = project.widthMeters ?? Math.min(spanXMeters, spanZMeters);
+
+  const areaFormatted = areaSqMeters >= 1000000
+    ? `${(areaSqMeters / 1000000).toFixed(2)} km² (${(areaSqMeters / 10000).toFixed(1)} ha)`
+    : areaSqMeters >= 10000
+      ? `${(areaSqMeters / 10000).toFixed(2)} ha (${areaSqMeters.toLocaleString()} m²)`
+      : `${areaSqMeters.toLocaleString()} m²`;
 
   useEffect(() => {
     if (!mapRef.current) return;
@@ -92,7 +96,7 @@ export const Project2DMapBoundary: React.FC<Project2DMapBoundaryProps> = ({ proj
         layers:  [{ id: 'base', type: 'raster', source: 'base' }],
       },
       center: [project.longitude, project.latitude],
-      zoom: 15.6, pitch: 28, bearing: -6,
+      zoom: 12, pitch: 25, bearing: -4,
     });
 
     map.addControl(new maplibregl.NavigationControl({ showCompass: true }), 'top-right');
@@ -111,14 +115,14 @@ export const Project2DMapBoundary: React.FC<Project2DMapBoundaryProps> = ({ proj
       map.addLayer({ id: 'mask', type: 'fill', source: 'mask', paint: { 'fill-color': '#0b1220', 'fill-opacity': mapStyle === 'satellite' ? 0.28 : 0.42 } });
 
       map.addSource('boundary', { type: 'geojson', data: { type: 'FeatureCollection', features: [{ type: 'Feature', properties: {}, geometry: { type: 'Polygon', coordinates: [polygonCoords] } }] } });
-      map.addLayer({ id: 'boundary-fill', type: 'fill',   source: 'boundary', paint: { 'fill-color': typeColor, 'fill-opacity': 0.22 } });
-      map.addLayer({ id: 'boundary-line', type: 'line',   source: 'boundary', paint: { 'line-color': typeColor, 'line-width': 3, 'line-opacity': 0.95 } });
+      map.addLayer({ id: 'boundary-fill', type: 'fill',   source: 'boundary', paint: { 'fill-color': typeColor, 'fill-opacity': 0.25 } });
+      map.addLayer({ id: 'boundary-line', type: 'line',   source: 'boundary', paint: { 'line-color': typeColor, 'line-width': 3.5, 'line-opacity': 0.95 } });
 
       const lats = polygonCoords.map(c => c[1]);
       const lngs = polygonCoords.map(c => c[0]);
       map.fitBounds(
         [[Math.min(...lngs), Math.min(...lats)], [Math.max(...lngs), Math.max(...lats)]],
-        { padding: 76, duration: 0, pitch: 28, bearing: -6 }
+        { padding: 60, duration: 0, pitch: 25, bearing: -4 }
       );
 
       const el = document.createElement('div');
@@ -202,9 +206,9 @@ export const Project2DMapBoundary: React.FC<Project2DMapBoundaryProps> = ({ proj
       {/* Bottom Left: Calibrated Real Dimensions HUD */}
       <div style={{ ...GLASS_CARD, position: 'absolute', bottom: '24px', left: '20px', padding: '12px 18px', display: 'flex', gap: '20px', zIndex: 10 }}>
         <div>
-          <div style={{ fontSize: '10px', color: '#86868b', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '2px' }}>2D Parcel Span</div>
+          <div style={{ fontSize: '10px', color: '#86868b', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '2px' }}>Corridor Dimensions</div>
           <div style={{ fontSize: '13px', fontWeight: 700, color: '#1d1d1f', fontFamily: 'SF Mono, ui-monospace, monospace' }}>
-            {spanXMeters}m × {spanZMeters}m
+            {formatDistance(displayLengthMeters)} L × {displayWidthMeters.toFixed(1)}m W
           </div>
         </div>
         <div>
@@ -216,7 +220,7 @@ export const Project2DMapBoundary: React.FC<Project2DMapBoundaryProps> = ({ proj
         <div>
           <div style={{ fontSize: '10px', color: '#86868b', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '2px' }}>Depth Profile</div>
           <div style={{ fontSize: '13px', fontWeight: 700, color: '#9a6700', fontFamily: 'SF Mono, ui-monospace, monospace' }}>
-            {project.depthMeters ? `–${project.depthMeters}m` : '—'}
+            {project.depthMeters ? `–${project.depthMeters.toFixed(1)}m` : '—'}
           </div>
         </div>
         {project.heightMeters ? (

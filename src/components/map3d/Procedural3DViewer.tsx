@@ -759,21 +759,25 @@ export const Procedural3DViewer: React.FC<Procedural3DViewerProps> = ({
             <div>
               <div style={{ fontSize: '9.5px', color: '#86868b', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Calibrated Footprint</div>
               <div style={{ fontSize: '12.5px', fontWeight: 700, color: '#1d1d1f', fontFamily: 'SF Mono, ui-monospace, monospace' }}>
-                {activeDims.lengthMeters}m L × {activeDims.widthMeters}m W
+                {activeDims.lengthMeters >= 1000 ? `${(activeDims.lengthMeters / 1000).toFixed(1)} km` : `${activeDims.lengthMeters} m`} L × {activeDims.widthMeters.toFixed(1)} m W
               </div>
             </div>
             <div style={{ width: '1px', height: '22px', background: 'rgba(0,0,0,0.08)' }} />
             <div>
               <div style={{ fontSize: '9.5px', color: '#86868b', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Profile Height / Depth</div>
               <div style={{ fontSize: '12.5px', fontWeight: 700, color: '#0071e3', fontFamily: 'SF Mono, ui-monospace, monospace' }}>
-                {activeDims.heightMeters > 0 ? `+${activeDims.heightMeters}m` : 'Surface'} · <span style={{ color: '#9a6700' }}>–{depthM.toFixed(1)}m</span>
+                {activeDims.heightMeters > 0 ? `+${activeDims.heightMeters.toFixed(1)}m` : 'Surface'} · <span style={{ color: '#9a6700' }}>–{depthM.toFixed(1)}m</span>
               </div>
             </div>
             <div style={{ width: '1px', height: '22px', background: 'rgba(0,0,0,0.08)' }} />
             <div>
               <div style={{ fontSize: '9.5px', color: '#86868b', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Parcel Area & Scale</div>
               <div style={{ fontSize: '12.5px', fontWeight: 700, color: '#1a7f37', fontFamily: 'SF Mono, ui-monospace, monospace' }}>
-                {activeMetrics.areaSqMeters.toLocaleString()} m² · 1:1 Scale Calibrated
+                {activeMetrics.areaSqMeters >= 1000000
+                  ? `${(activeMetrics.areaSqMeters / 1000000).toFixed(2)} km² · 1:1 Scale`
+                  : activeMetrics.areaSqMeters >= 10000
+                    ? `${(activeMetrics.areaSqMeters / 10000).toFixed(1)} ha · 1:1 Scale`
+                    : `${activeMetrics.areaSqMeters.toLocaleString()} m² · 1:1 Scale`}
               </div>
             </div>
           </div>
