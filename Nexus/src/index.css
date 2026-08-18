@@ -1,0 +1,337 @@
+/* ════════════════════════════════════════════════════════
+   CivicSync — Apple.com classic product aesthetic
+   Light canvas, black type, Apple blue accent
+════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── Surface System ── */
+  --apple-glass-bg: rgba(255, 255, 255, 0.46);
+  --apple-glass-card: rgba(255, 255, 255, 0.48);
+  --apple-glass-hover: rgba(255, 255, 255, 0.62);
+  --apple-glass-border: rgba(255, 255, 255, 0.58);
+  --apple-glass-subtle-border: rgba(255, 255, 255, 0.42);
+  --apple-glass-shadow: 0 12px 40px -12px rgba(15, 23, 42, 0.22), 0 2px 10px -2px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255, 255, 255, 0.72);
+  --apple-glass-shadow-hover: 0 20px 50px -12px rgba(15, 23, 42, 0.28), 0 6px 16px -4px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.85);
+
+  /* ── Apple Text Scale ── */
+  --text-primary: #1d1d1f;
+  --text-secondary: #6e6e73;
+  --text-tertiary: #86868b;
+  --text-link: #0071e3;
+
+  /* ── Apple Accent & Highlights ── */
+  --accent: #0071e3;
+  --accent-hover: #0077ed;
+  --accent-soft: rgba(0, 113, 227, 0.10);
+
+  /* ── Status Colors ── */
+  --status-active: #1a7f37;
+  --status-active-bg: rgba(240, 250, 243, 0.85);
+  --status-pending: #9a6700;
+  --status-pending-bg: rgba(254, 248, 231, 0.85);
+  --status-approved: #0071e3;
+  --status-approved-bg: rgba(240, 246, 255, 0.85);
+  --status-completed: #5856d6;
+  --status-completed-bg: rgba(244, 244, 253, 0.85);
+  --status-delayed: #c2411b;
+  --status-delayed-bg: rgba(254, 242, 240, 0.85);
+  --status-cancelled: #6e6e73;
+  --status-cancelled-bg: rgba(245, 245, 247, 0.85);
+
+  /* ── Typography & Shape ── */
+  --font: Inter, -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "SF Mono", ui-monospace, "Cascadia Mono", monospace;
+
+  --radius-xs: 6px;
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --radius-lg: 22px;
+  --radius-xl: 28px;
+  --radius-pill: 980px;
+
+  /* Legacy variable mappings */
+  --bg-main: transparent;
+  --bg-card: var(--apple-glass-card);
+  --bg-glass: var(--apple-glass-bg);
+  --bg-panel: var(--apple-glass-card);
+  --border-subtle: var(--apple-glass-subtle-border);
+  --border-active: var(--apple-glass-border);
+  --border-accent: var(--accent);
+  --accent-blue: var(--accent);
+  --accent-emerald: #1a7f37;
+  --accent-amber: #9a6700;
+  --accent-rose: #c2411b;
+  --accent-violet: #5856d6;
+  --accent-indigo: #5856d6;
+  --accent-cyan: #0071e3;
+  --font-sans: var(--font);
+  --font-heading: var(--font);
+}
+
+/* ── RESET ── */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  font-family: var(--font);
+  color: var(--text-primary);
+  line-height: 1.47059;
+  letter-spacing: -0.003em;
+}
+
+/* ── HIGH DEFINITION LIQUID GLASS BACKGROUND CONTAINER ── */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  position: relative;
+  background-color: #0d1527;
+  background-image:
+    radial-gradient(circle at 12% 18%, rgba(0, 113, 227, 0.32) 0%, transparent 48%),
+    radial-gradient(circle at 88% 12%, rgba(139, 92, 246, 0.28) 0%, transparent 52%),
+    radial-gradient(circle at 45% 82%, rgba(14, 165, 233, 0.25) 0%, transparent 56%),
+    radial-gradient(circle at 75% 80%, rgba(99, 102, 241, 0.22) 0%, transparent 50%),
+    linear-gradient(180deg, rgba(15, 23, 42, 0.35) 0%, rgba(30, 41, 59, 0.20) 45%, rgba(15, 23, 42, 0.45) 100%),
+    url('/hd-city-bg.jpg');
+  background-size: cover;
+  background-position: center 32%;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+.app-container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 20% 0%, rgba(255, 255, 255, 0.22) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 100%, rgba(56, 189, 248, 0.18) 0%, transparent 55%),
+    radial-gradient(ellipse at 50% 50%, rgba(99, 102, 241, 0.12) 0%, transparent 60%);
+  backdrop-filter: blur(14px) saturate(160%);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.app-container::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.06) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+  animation: liquidFloat 24s ease-in-out infinite alternate;
+}
+
+@keyframes liquidFloat {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(3%, 4%) scale(1.04); }
+  100% { transform: translate(-3%, -2%) scale(0.98); }
+}
+
+.main-content {
+  flex: 1;
+  overflow-y: auto;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── ULTRA-PREMIUM APPLE LIQUID FROSTED GLASS CARD ── */
+.glass-card {
+  background: rgba(255, 255, 255, 0.52) !important;
+  backdrop-filter: blur(40px) saturate(220%) !important;
+  -webkit-backdrop-filter: blur(40px) saturate(220%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.65) !important;
+  border-radius: var(--radius-md) !important;
+  box-shadow: 0 16px 45px -12px rgba(15, 23, 42, 0.28), 0 2px 10px -2px rgba(0, 0, 0, 0.08), inset 0 1px 1px rgba(255, 255, 255, 0.85) !important;
+  transition: box-shadow 0.28s cubic-bezier(0.25, 0.1, 0.25, 1), background 0.28s ease, border-color 0.28s ease, transform 0.2s ease !important;
+}
+
+.glass-card:hover {
+  background: rgba(255, 255, 255, 0.64) !important;
+  box-shadow: 0 24px 56px -12px rgba(15, 23, 42, 0.34), 0 6px 18px -4px rgba(0, 0, 0, 0.12), inset 0 1px 1px rgba(255, 255, 255, 0.95) !important;
+  border-color: rgba(255, 255, 255, 0.88) !important;
+}
+
+/* ── STATUS BADGES ── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  backdrop-filter: blur(8px);
+}
+
+.badge-active    { background: var(--status-active-bg);    color: var(--status-active);    border: 1px solid rgba(26, 127, 55, 0.30); }
+.badge-pending   { background: var(--status-pending-bg);   color: var(--status-pending);   border: 1px solid rgba(154, 103, 0, 0.30); }
+.badge-approved  { background: var(--status-approved-bg);  color: var(--status-approved);  border: 1px solid rgba(0, 113, 227, 0.30); }
+.badge-completed { background: var(--status-completed-bg); color: var(--status-completed); border: 1px solid rgba(88, 86, 214, 0.30); }
+.badge-delayed   { background: var(--status-delayed-bg);   color: var(--status-delayed);   border: 1px solid rgba(194, 65, 27, 0.30); }
+.badge-cancelled { background: var(--status-cancelled-bg); color: var(--status-cancelled); border: 1px solid rgba(110, 110, 115, 0.30); }
+
+/* ── PROVENANCE TAGS ── */
+.provenance-tag {
+  font-size: 10px;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: var(--radius-xs);
+  background: rgba(255, 255, 255, 0.85);
+  color: var(--text-secondary);
+  border: 1px solid rgba(0, 0, 0, 0.10);
+  backdrop-filter: blur(10px);
+}
+
+.provenance-ai         { background: rgba(244, 244, 253, 0.90); color: #5856d6; border-color: rgba(88, 86, 214, 0.35); }
+.provenance-verified   { background: rgba(240, 250, 243, 0.90); color: #1a7f37; border-color: rgba(26, 127, 55, 0.35); }
+.provenance-calculated { background: rgba(240, 246, 255, 0.90); color: #0071e3; border-color: rgba(0, 113, 227, 0.35); }
+.provenance-estimated  { background: rgba(254, 248, 231, 0.90); color: #9a6700; border-color: rgba(154, 103, 0, 0.35); }
+
+/* ── APPLE LIQUID BUTTONS ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 8px 18px;
+  border-radius: var(--radius-pill);
+  font-size: 13px;
+  font-weight: 500;
+  font-family: var(--font);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  border: none;
+  outline: none;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn-primary {
+  background: #0071e3;
+  color: #ffffff;
+  box-shadow: none;
+  border: 1px solid transparent;
+}
+
+.btn-primary:hover {
+  background: #0077ed;
+  box-shadow: none;
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.88);
+  color: var(--text-primary);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(16px);
+  box-shadow: none;
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.btn-success {
+  background: #1d1d1f;
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+}
+
+.btn-danger {
+  background: rgba(255, 242, 240, 0.85);
+  color: #c2411b;
+  border: 1px solid rgba(194, 65, 27, 0.3);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--accent);
+}
+
+.btn-ghost:hover {
+  background: rgba(0, 113, 227, 0.08);
+}
+
+.btn-sm {
+  padding: 5px 12px;
+  font-size: 12px;
+}
+
+/* ── FORM CONTROLS ── */
+.form-input,
+.form-select,
+.form-textarea {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(0, 0, 0, 0.10);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  padding: 9px 13px;
+  font-size: 13.5px;
+  font-family: var(--font);
+  outline: none;
+  box-shadow: none;
+  transition: all 0.2s ease;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.20), 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.form-select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%236e6e73' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 34px;
+}
+
+/* ── MAP CONTAINER ── */
+.maplibre-gl-map {
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+}
+
+/* ── SCROLLBARS ── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.18); border-radius: 8px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(0, 0, 0, 0.32); }
+
+@keyframes fadeInScale {
+  from { opacity: 0; transform: scale(0.97) translateY(8px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

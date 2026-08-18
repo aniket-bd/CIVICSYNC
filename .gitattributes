@@ -1,0 +1,15 @@
+﻿# Normalize line endings to LF on all platforms
+* text=auto eol=lf
+
+# Force binary for images & fonts
+*.jpg binary
+*.jpeg binary
+*.png binary
+*.gif binary
+*.ico binary
+*.webp binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
+*.pdf binary

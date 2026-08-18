@@ -1,0 +1,28 @@
+﻿# ── Planning & agent scratch files ──
+implementation_plan.md
+walkthrough.md
+*.scratch.md
+.agents/
+.gemini/
+
+# ── macOS ──
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+
+# ── Windows ──
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# ── Editor / IDE ──
+.vscode/settings.json
+.vscode/*.code-workspace
+.idea/
+*.suo
+*.sw?
+*.sublime-project
+*.sublime-workspace
