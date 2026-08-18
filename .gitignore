@@ -1,4 +1,4 @@
-﻿# ── Planning & agent scratch files ──
+# ── Planning & agent scratch files ──
 implementation_plan.md
 walkthrough.md
 *.scratch.md
@@ -27,3 +27,4 @@ $RECYCLE.BIN/
 *.sublime-project
 *.sublime-workspace
 node_modules
+dist/
